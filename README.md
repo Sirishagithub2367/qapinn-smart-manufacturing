@@ -22,7 +22,7 @@ This repository contains three case studies:
 |---|---|---|
 | **Heat Equation** | 1D heat diffusion in a battery cooling plate (`∂u/∂t = α ∂²u/∂x²`) | `notebooks/heat_equation/` |
 | **EV Battery Cooling** | Thermal + flow modeling for EV battery cooling systems | `notebooks/ev_battery_cooling/` |
-| **Traffic Flow** | Traffic flow modeling | `notebooks/traffic_flow/` |
+
 
 Each case study includes a **classical PINN** baseline and a **QAPINN**
 variant. The EV Battery case study also includes a **circuit-depth ablation
