@@ -7,15 +7,12 @@ Physics-Informed Neural Networks (PINNs).
 Built with **PennyLane** (quantum circuits) and **PyTorch** (classical layers).
 Quantum-Assisted Physics-Informed Neural Networks (QAPINN) for Smart Manufacturing
 
-Hybrid quantum-classical neural networks that solve physics-governed PDEs for smart-manufacturing case studies — benchmarked against classical Physics-Informed Neural Networks (PINNs).
 
-Built with PennyLane (quantum circuits) and PyTorch (classical layers).
-
-🎯 The Challenge
+ THE CHALLENGE
 
 Smart manufacturing systems — including electric vehicle (EV) battery cooling and thermal management — rely on solving physics-governed partial differential equations (PDEs) to predict temperature and flow behavior. Classical Physics-Informed Neural Networks (PINNs) can solve these PDEs but require large parameter counts and long training times to reach acceptable accuracy. The challenge for this project was to explore whether quantum- assisted neural networks (QAPINNs) — hybrid models that replace part of the classical network with a variational quantum circuit — could match or improve on classical PINN performance for smart-manufacturing PDEs (heat diffusion and fluid/Burgers'-type flow), while using fewer trainable parameters.
 
-🛠️ Our Approach
+OUR APPROACH
 
 Our team built and compared classical PINN and quantum-assisted QAPINN models across two physics case studies:
 
@@ -24,7 +21,7 @@ EV Battery Cooling / Burgers' Equation — synthetic airflow velocity field in a
 
 For the Heat equation, we additionally ran an ablation study varying quantum circuit depth (1, 2, and 4 variational layers at a fixed qubit width) and qubit width (2 qubits), to understand the accuracy/cost tradeoff of the quantum circuit's size. Each model was evaluated on the same metrics — PDE residual error, relative L2 error against the analytical solution, training time, trainable parameter count, and memory usage — to give a fair, like-for-like comparison between classical and quantum-assisted approaches.
 
-Overview
+OVERVIEW
 
 A standard PINN learns a solution to a PDE by minimizing the residual of the governing equation alongside boundary/initial conditions, using automatic differentiation. QAPINN replaces or augments part of the classical network with a variational quantum circuit (angle embedding + strongly entangling layers) acting as a trainable feature transformation, then compares accuracy, training time, parameter count, and memory usage against the classical baseline.
 
@@ -36,7 +33,7 @@ EV Battery Cooling	Thermal + flow modeling / Burgers' equation for EV battery co
 
 Each case study includes a classical PINN baseline and a QAPINN variant. The EV Battery case study also includes a circuit-depth ablation study (circuit_depth_study/) comparing 1, 2, and 4 variational layers at a fixed 4-qubit width, to study the accuracy/cost tradeoff of quantum circuit depth. The Heat equation case study additionally includes a 2-qubit width variant (Qubits_2.ipynb).
 
-Repository structure
+REPOSITARY STRUCTURE 
 .
 ├── notebooks/
 │   ├── heat_equation/
