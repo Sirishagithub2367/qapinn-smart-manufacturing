@@ -5,120 +5,191 @@ smart-manufacturing case studies — benchmarked against classical
 Physics-Informed Neural Networks (PINNs).
 
 Built with **PennyLane** (quantum circuits) and **PyTorch** (classical layers).
-Quantum-Assisted Physics-Informed Neural Networks (QAPINN) for Smart Manufacturing
 
+## 🎯 The Challenge
 
- THE CHALLENGE
+Smart manufacturing systems — including electric vehicle (EV) battery cooling
+and thermal management — rely on solving physics-governed partial
+differential equations (PDEs) to predict temperature and flow behavior.
+Classical Physics-Informed Neural Networks (PINNs) can solve these PDEs but
+require large parameter counts and long training times to reach acceptable
+accuracy. The challenge for this project was to explore whether **quantum-
+assisted neural networks (QAPINNs)** — hybrid models that replace part of
+the classical network with a variational quantum circuit — could match or
+improve on classical PINN performance for smart-manufacturing PDEs (heat
+diffusion and fluid/Burgers'-type flow), while using fewer trainable
+parameters.
 
-Smart manufacturing systems — including electric vehicle (EV) battery cooling and thermal management — rely on solving physics-governed partial differential equations (PDEs) to predict temperature and flow behavior. Classical Physics-Informed Neural Networks (PINNs) can solve these PDEs but require large parameter counts and long training times to reach acceptable accuracy. The challenge for this project was to explore whether quantum- assisted neural networks (QAPINNs) — hybrid models that replace part of the classical network with a variational quantum circuit — could match or improve on classical PINN performance for smart-manufacturing PDEs (heat diffusion and fluid/Burgers'-type flow), while using fewer trainable parameters.
+## 🛠️ Our Approach
 
-OUR APPROACH
+Our team built and compared classical PINN and quantum-assisted QAPINN
+models across two physics case studies:
 
-Our team built and compared classical PINN and quantum-assisted QAPINN models across two physics case studies:
+1. **Heat Equation** — 1D heat diffusion in a battery cooling plate
+   (`∂u/∂t = α ∂²u/∂x²`), solved with both a classical PINN and a QAPINN
+   using a PennyLane variational quantum circuit (angle embedding +
+   strongly entangling layers) wrapped as a PyTorch layer.
+2. **EV Battery Cooling / Burgers' Equation** — synthetic airflow velocity
+   field in a battery cooling channel, similarly solved with classical PINN
+   and QAPINN variants.
 
-Heat Equation — 1D heat diffusion in a battery cooling plate (∂u/∂t = α ∂²u/∂x²), solved with both a classical PINN and a QAPINN using a PennyLane variational quantum circuit (angle embedding + strongly entangling layers) wrapped as a PyTorch layer.
-EV Battery Cooling / Burgers' Equation — synthetic airflow velocity field in a battery cooling channel, similarly solved with classical PINN and QAPINN variants.
+For the Heat equation, we additionally ran an **ablation study** varying
+quantum circuit depth (1, 2, and 4 variational layers at a fixed qubit
+width) and qubit width (2 qubits), to understand the accuracy/cost tradeoff
+of the quantum circuit's size. Each model was evaluated on the same metrics
+— PDE residual error, relative L2 error against the analytical solution,
+training time, trainable parameter count, and memory usage — to give a
+fair, like-for-like comparison between classical and quantum-assisted
+approaches.
 
-For the Heat equation, we additionally ran an ablation study varying quantum circuit depth (1, 2, and 4 variational layers at a fixed qubit width) and qubit width (2 qubits), to understand the accuracy/cost tradeoff of the quantum circuit's size. Each model was evaluated on the same metrics — PDE residual error, relative L2 error against the analytical solution, training time, trainable parameter count, and memory usage — to give a fair, like-for-like comparison between classical and quantum-assisted approaches.
+## Overview
 
-OVERVIEW
-
-A standard PINN learns a solution to a PDE by minimizing the residual of the governing equation alongside boundary/initial conditions, using automatic differentiation. QAPINN replaces or augments part of the classical network with a variational quantum circuit (angle embedding + strongly entangling layers) acting as a trainable feature transformation, then compares accuracy, training time, parameter count, and memory usage against the classical baseline.
+A standard PINN learns a solution to a PDE by minimizing the residual of the
+governing equation alongside boundary/initial conditions, using automatic
+differentiation. QAPINN replaces or augments part of the classical network
+with a **variational quantum circuit** (angle embedding + strongly entangling
+layers) acting as a trainable feature transformation, then compares
+accuracy, training time, parameter count, and memory usage against the
+classical baseline.
 
 This repository contains the following case studies:
 
-Case study	PDE / physics	Notebooks
-Heat Equation	1D heat diffusion in a battery cooling plate (∂u/∂t = α ∂²u/∂x²)	notebooks/heat_equation/
-EV Battery Cooling	Thermal + flow modeling / Burgers' equation for EV battery cooling	notebooks/ev_battery_cooling/
+| Case study             | PDE / physics                                                      | Notebooks                       |
+| ---------------------- | ------------------------------------------------------------------ | -------------------------------- |
+| **Heat Equation**      | 1D heat diffusion in a battery cooling plate (`∂u/∂t = α ∂²u/∂x²`) | `notebooks/heat_equation/`       |
+| **EV Battery Cooling** | Thermal + flow modeling / Burgers' equation for EV battery cooling | `notebooks/ev_battery_cooling/`  |
 
-Each case study includes a classical PINN baseline and a QAPINN variant. The EV Battery case study also includes a circuit-depth ablation study (circuit_depth_study/) comparing 1, 2, and 4 variational layers at a fixed 4-qubit width, to study the accuracy/cost tradeoff of quantum circuit depth. The Heat equation case study additionally includes a 2-qubit width variant (Qubits_2.ipynb).
+Each case study includes a **classical PINN** baseline and a **QAPINN**
+variant. The EV Battery case study also includes a **circuit-depth ablation
+study** (`circuit_depth_study/`) comparing 1, 2, and 4 variational layers at
+a fixed 4-qubit width, to study the accuracy/cost tradeoff of quantum
+circuit depth. The Heat equation case study additionally includes a
+2-qubit width variant (`Qubits_2.ipynb`).
 
-REPOSITARY STRUCTURE 
+## Repository structure
 .
 ├── notebooks/
-│   ├── heat_equation/
-│   │   ├── Heat_PINN.ipynb          # Classical baseline
-│   │   ├── Heat_QAPINN.ipynb        # Quantum-assisted version (4 qubits)
-│   │   └── Qubits_2.ipynb           # Quantum-assisted version (2 qubits)
-│   └── ev_battery_cooling/
-│       ├── EV_Battery_PINN.ipynb
-│       ├── EV_Battery_QAPINN.ipynb
-│       └── circuit_depth_study/
-│           ├── Depth_1_Layer.ipynb  # n_qubits=4, n_layers=1
-│           ├── Depth_2_Layer.ipynb  # n_qubits=4, n_layers=2
-│           └── Depth_4_Layer.ipynb  # n_qubits=4, n_layers=4
-├── results/          # Saved metrics/CSVs (generated by notebooks)
-├── figures/          # Generated plots
+│ ├── heat_equation/
+│ │ ├── Heat_PINN.ipynb # Classical baseline
+│ │ ├── Heat_QAPINN.ipynb # Quantum-assisted version (4 qubits)
+│ │ └── Qubits_2.ipynb # Quantum-assisted version (2 qubits)
+│ └── ev_battery_cooling/
+│ ├── EV_Battery_PINN.ipynb
+│ ├── EV_Battery_QAPINN.ipynb
+│ └── circuit_depth_study/
+│ ├── Depth_1_Layer.ipynb # n_qubits=4, n_layers=1
+│ ├── Depth_2_Layer.ipynb # n_qubits=4, n_layers=2
+│ └── Depth_4_Layer.ipynb # n_qubits=4, n_layers=4
+├── results/ # Saved metrics/CSVs (generated by notebooks)
+├── figures/ # Generated plots
 ├── docs/
-│   ├── report/        # Technical report (in progress)
-│   └── presentation/   # Slides (in progress)
+│ ├── report/ # Technical report (in progress)
+│ └── presentation/ # Slides (in progress)
 ├── requirements.txt
 └── README.md
-Method summary
 
-The quantum layer in each QAPINN is a PennyLane qml.qnode wrapped as a PyTorch layer via qml.qnn.TorchLayer:
+## Method summary
 
-Encoding — classical inputs are angle-embedded onto qubits (qml.AngleEmbedding).
-Variational block — qml.StronglyEntanglingLayers with trainable weights of shape (n_layers, n_qubits, 3).
-Readout — Pauli-Z expectation value measured on each qubit.
-This quantum layer is sandwiched between classical nn.Linear layers, trained end-to-end with the physics-informed loss (PDE residual + boundary/initial condition loss).
+The quantum layer in each QAPINN is a PennyLane `qml.qnode` wrapped as a
+PyTorch layer via `qml.qnn.TorchLayer`:
 
-Each notebook reports: PDE residual error, relative L2 error against the analytical solution, training time, trainable parameter count, and memory usage.
+1. **Encoding** — classical inputs are angle-embedded onto qubits
+(`qml.AngleEmbedding`).
+2. **Variational block** — `qml.StronglyEntanglingLayers` with trainable
+weights of shape `(n_layers, n_qubits, 3)`.
+3. **Readout** — Pauli-Z expectation value measured on each qubit.
+4. This quantum layer is sandwiched between classical `nn.Linear` layers,
+trained end-to-end with the physics-informed loss (PDE residual +
+boundary/initial condition loss).
 
-📈 Results / Findings
+Each notebook reports: PDE residual error, relative L2 error against the
+analytical solution, training time, trainable parameter count, and memory
+usage.
 
-Heat Equation:
+## 📈 Results / Findings
 
-Metric	Classical PINN	QAPINN (4 qubits, 2 layers)
-PDE Residual Error	4.38×10⁻⁴	7.65×10⁻³
-Relative L2 Error	2.77%	18.03%
-Training Time	15.5 sec	650 sec
-Trainable Parameters	921	577
-Memory Usage	388 MB	777 MB
+**Heat Equation:**
 
-Circuit-depth ablation (4 qubits, Heat equation):
+| Metric | Classical PINN | QAPINN (4 qubits, 2 layers) |
+|---|---|---|
+| PDE Residual Error | 4.38×10⁻⁴ | 7.65×10⁻³ |
+| Relative L2 Error | 2.77% | 18.03% |
+| Training Time | 15.5 sec | 650 sec |
+| Trainable Parameters | 921 | 577 |
+| Memory Usage | 388 MB | 777 MB |
 
-Depth	Parameters	Relative L2 Error	Training Time
-1 layer	565	15.81%	261 sec
-2 layers	577	18.03%	650 sec
-4 layers	577	18.03%	650 sec
+**Circuit-depth ablation (4 qubits, Heat equation):**
 
-EV Battery Cooling / Burgers' Equation:
+| Depth | Parameters | Relative L2 Error | Training Time |
+|---|---|---|---|
+| 1 layer | 565 | 15.81% | 261 sec |
+| 2 layers | 577 | 18.03% | 650 sec |
+| 4 layers | 577 | 18.03% | 650 sec |
 
-Metric	Classical PINN	QAPINN (4 qubits, 2 layers)
-MSE	6.40	(not computed — see Limitations)
-Relative L2 Error	56.07%	(not computed — see Limitations)
-Training Time	—	110.2 sec
-Final Training Loss	—	0.112
+**EV Battery Cooling / Burgers' Equation:**
 
-Key finding: across both case studies, the classical PINN consistently achieved lower error with fewer parameters and far less training time than the QAPINN variants at this problem scale and simulator setup. QAPINN used fewer trainable parameters (577 vs. 921 for the heat equation), but this parameter efficiency did not translate into better accuracy or faster training under classical quantum-circuit simulation.
+| Metric | Classical PINN | QAPINN (4 qubits, 2 layers) |
+|---|---|---|
+| MSE | 6.40 | *(not computed — see Limitations)* |
+| Relative L2 Error | 56.07% | *(not computed — see Limitations)* |
+| Training Time | — | 110.2 sec |
+| Final Training Loss | — | 0.112 |
 
-🔮 Limitations & Recommended Next Steps
-QAPINN underperformed the classical PINN on both accuracy and training time in our experiments. This may be due to limited hyperparameter tuning of the quantum circuit, the small qubit width (2–4 qubits), or inherent overhead of simulating quantum circuits classically (PennyLane's default.qubit simulator) rather than running on real quantum hardware.
-Circuit-depth ablation (2 vs. 4 layers) produced identical results, indicating those two runs did not fully re-execute with their intended configurations. This should be re-run and corrected to get a valid depth-vs-accuracy comparison.
-EV Battery QAPINN's MSE/relative L2 error was not computed — training completed, but the final comparison-to-PINN step was left incomplete in the notebook. Recommended next step: complete this cell to get a full head-to-head comparison.
-Traffic flow case study was not implemented in this submission (only library imports were present, no PDE/model code) and was removed from this repository as a result.
-Future work should explore larger qubit counts, alternative quantum circuit architectures (e.g. data re-uploading), and testing on real quantum hardware or noise-aware simulators to see whether QAPINN's parameter efficiency can translate into a genuine accuracy or cost advantage over classical PINNs.
-Getting started
+**Key finding:** across both case studies, the classical PINN consistently
+achieved **lower error with fewer parameters and far less training time**
+than the QAPINN variants at this problem scale and simulator setup. QAPINN
+used fewer trainable parameters (577 vs. 921 for the heat equation), but
+this parameter efficiency did not translate into better accuracy or faster
+training under classical quantum-circuit simulation.
+
+## 🔮 Limitations & Recommended Next Steps
+
+- **QAPINN underperformed the classical PINN** on both accuracy and training
+  time in our experiments. This may be due to limited hyperparameter tuning
+  of the quantum circuit, the small qubit width (2–4 qubits), or inherent
+  overhead of simulating quantum circuits classically (PennyLane's
+  `default.qubit` simulator) rather than running on real quantum hardware.
+- **Circuit-depth ablation (2 vs. 4 layers) produced identical results**,
+  indicating those two runs did not fully re-execute with their intended
+  configurations. This should be re-run and corrected to get a valid
+  depth-vs-accuracy comparison.
+- **EV Battery QAPINN's MSE/relative L2 error was not computed** — training
+  completed, but the final comparison-to-PINN step was left incomplete in
+  the notebook. Recommended next step: complete this cell to get a full
+  head-to-head comparison.
+- **Traffic flow case study was not implemented** in this submission (only
+  library imports were present, no PDE/model code) and was removed from
+  this repository as a result.
+- **Future work** should explore larger qubit counts, alternative quantum
+  circuit architectures (e.g. data re-uploading), and testing on real
+  quantum hardware or noise-aware simulators to see whether QAPINN's
+  parameter efficiency can translate into a genuine accuracy or
+  cost advantage over classical PINNs.
+
+## Getting started
 git clone <this-repo-url>
 cd <repo-name>
 pip install -r requirements.txt
 jupyter notebook
+Then open any notebook under `notebooks/` and run all cells. Each notebook
+is self-contained (installs/imports what it needs).
 
-Then open any notebook under notebooks/ and run all cells. Each notebook is self-contained (installs/imports what it needs).
+## 👥 Team Members & Contributions
 
-👥 Team Members & Contributions
-Name	Contribution
-Sherin Sanchana Jenifer J	EV Battery Cooling / Burgers' Equation case study — built the synthetic airflow dataset, implemented the classical PINN baseline, developed the QAPINN quantum-assisted model (4-qubit variational circuit), and completed the QAPINN training run with loss/time results.
-Sree Vaishnavi R	Heat Equation case study — built the classical PINN and QAPINN models for 1D heat diffusion, and ran the circuit-depth and qubit-width ablation studies (1/2/4 layers, 2-qubit variant) to evaluate accuracy vs. quantum circuit size.
-Sirisha A	Repository setup and version control (GitHub structure, folder organization, commits/pushes), technical report drafting, and overall project documentation (README, results consolidation).
-Status
- Heat equation: PINN vs QAPINN
- EV battery cooling: PINN vs QAPINN
- Circuit-depth ablation (1/2/4 layers, 4 qubits)
- Qubit-width variant (2 qubits, heat equation)
- Technical report (docs/report/)
- Presentation (docs/presentation/)
+| Name | Contribution |
+|---|---|
+| **Sherin Sanchana Jenifer J** | EV Battery Cooling / Burgers' Equation case study — built the synthetic airflow dataset, implemented the classical PINN baseline, developed the QAPINN quantum-assisted model (4-qubit variational circuit), and completed the QAPINN training run with loss/time results. |
+| **Sree Vaishnavi R** | Heat Equation case study — built the classical PINN and QAPINN models for 1D heat diffusion, and ran the circuit-depth and qubit-width ablation studies (1/2/4 layers, 2-qubit variant) to evaluate accuracy vs. quantum circuit size. |
+| **Sirisha A** | Repository setup and version control (GitHub structure, folder organization, commits/pushes), technical report drafting, and overall project documentation (README, results consolidation). |
+
+## Status
+
+- [x] Heat equation: PINN vs QAPINN
+- [x] EV battery cooling: PINN vs QAPINN
+- [x] Circuit-depth ablation (1/2/4 layers, 4 qubits)
+- [x] Qubit-width variant (2 qubits, heat equation)
+- [ ] Technical report (docs/report/)
+- [ ] Presentation (docs/presentation/)
 
 
 ## License
